@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import type { Column } from '../types';
+import type { Column, Id } from '../types';
 import ColumnContainer from './ColumnContainer';
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors, type DragEndEvent, type DragStartEvent} from '@dnd-kit/core';
 import { arrayMove, SortableContext } from '@dnd-kit/sortable';
@@ -32,6 +32,14 @@ function KanbanBoard() {
         setColumns(filteredColumns)
     }
 
+    function updateColumn(id: Id, title: string) {
+        const newColumns = columns.map(col => {
+            if (col.id !== id) return col;
+            return {...col, title}
+        });
+
+        setColumns(newColumns);
+    }
     function onDragStart(event: DragStartEvent) {
     console.log("drag started", event);
     if (event.active.data.current?.type === "Column") {
@@ -66,7 +74,7 @@ function KanbanBoard() {
                 <SortableContext items={columnsId}>
                     <div className="flex gap-4">
                         {columns.map(col => (
-                            <ColumnContainer key={col.id} column={col} deleteColumn={deleteColumn} />
+                            <ColumnContainer key={col.id} column={col} deleteColumn={deleteColumn} updateColumn={updateColumn} />
                         ))}
                     </div>
                 </SortableContext>
