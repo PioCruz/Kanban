@@ -82,6 +82,15 @@ function KanbanBoard() {
         setTask(newTask);
     }
 
+    function updateTask(id: Id, content: string) {
+        const newTask = task.map(task => {
+            if (task.id !== id) return task;
+            return { ...task, content};
+        });
+
+        setTask(newTask);
+    }
+
   return (
     <div className="m-auto flex min-h-screen w-full items-center overflow-x-auto overflow-y-hidden px-[40px]">
         <DndContext sensors={sensors} onDragStart={onDragStart} onDragEnd={onDragEnd}>
@@ -89,7 +98,7 @@ function KanbanBoard() {
                 <SortableContext items={columnsId}>
                     <div className="flex gap-4">
                         {columns.map(col => (
-                            <ColumnContainer key={col.id} column={col} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} deleteTask={deleteTask} tasks={task.filter(t => t.columnId === col.id)} />
+                            <ColumnContainer key={col.id} column={col} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} deleteTask={deleteTask} updateTask={updateTask} tasks={task.filter(t => t.columnId === col.id)} />
                         ))}
                     </div>
                 </SortableContext>
@@ -99,7 +108,7 @@ function KanbanBoard() {
                 </button>
             </div>
             {createPortal(<DragOverlay>
-                {activeColumn && <ColumnContainer column={activeColumn} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} deleteTask={deleteTask} tasks={task.filter(t => t.columnId === activeColumn.id)}/>}
+                {activeColumn && <ColumnContainer column={activeColumn} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} deleteTask={deleteTask} updateTask={updateTask} tasks={task.filter(t => t.columnId === activeColumn.id)}/>}
             </DragOverlay>, document.body)}
         </DndContext>
     </div>
